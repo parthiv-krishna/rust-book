@@ -89,3 +89,68 @@ pub fn eat_at_restaurant_3() {
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
 }
+
+// use allows us to not have to qualify the whole path (just last component)
+// updated to pub use on line 135
+// use crate::front_of_house::hosting;
+pub fn eat_at_restaurant_4() {
+    hosting::add_to_waitlist();
+}
+
+// would not compile: crate::front_of_house is only brought into the
+// scope of the use. not inside this module where it is not brought in
+// mod customer {
+//     pub fn eat_at_restaurant() {
+//         hosting::add_to_waitlist();
+//     }
+// }
+
+// this works, but is not idiomatic. leaving the parent module
+// clarifies that that the function is not locally defined
+use crate::front_of_house::hosting::add_to_waitlist;
+pub fn eat_at_restaurant_5() {
+    add_to_waitlist();
+}
+
+// however, for structs, enums, and other items, it is idiomatic
+// to specify the full path...
+use std::collections::HashMap;
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}
+
+// ...unless you have duplicate names, and need to disasmbiguate
+use std::fmt;
+use std::io;
+fn function1(f: &mut fmt::Formatter<'_>) -> fmt::Result {    
+    write!(f, "{}", 4)
+}
+fn function2() -> io::Result<()> {
+    Ok(())
+}
+
+// pub use: re-export the path to other scopes so the item is
+// available to be used, as if it was `use`d in the other scope
+pub use crate::front_of_house::hosting;
+pub fn eat_at_restaurant_6() {
+    hosting::add_to_waitlist();
+}
+
+// additional benefit: code that calls this as a library can now
+// just use restaurant::hosting instead of restaurant::front_of_house::hosting
+// better encapsulation (can restructure without breaking API)
+
+// use std::cmp::Ordering;
+// use std::io;
+// can be replaced with
+// use std::{io, cmp::Ordering};
+
+// use std::io;
+// use std::io::Write;
+// can be replaced with
+// use std::io::{self, Write};
+
+// possible but not recommended
+// use std::collections::*;
+// can make it unclear what names have been brought into scope
