@@ -154,3 +154,18 @@ pub fn eat_at_restaurant_6() {
 // possible but not recommended
 // use std::collections::*;
 // can make it unclear what names have been brought into scope
+
+
+// separating library into multiple files
+mod front_of_house2; // loads the file front_of_house2.rs (or front_of_house2/mod.rs)
+pub use crate::front_of_house2::hosting as hosting2;
+pub fn eat_at_restaurant_7() {
+    // add_to_waitlist is defined in front_of_house2
+    hosting2::add_to_waitlist(); 
+}
+
+mod front_of_house3;
+pub use crate::front_of_house3::hosting as hosting3;
+pub fn eat_at_restaurant_8() {
+    hosting3::add_to_waitlist(); 
+}
